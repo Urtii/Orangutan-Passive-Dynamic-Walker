@@ -410,7 +410,7 @@ bool MQTT::publish(const char* topic, const uint8_t* payload, unsigned int pleng
 
         return write(header, buffer, length-5);
     }
-    return false;
+      return false;
 }
 
 bool MQTT::publishRelease(uint16_t messageid) {

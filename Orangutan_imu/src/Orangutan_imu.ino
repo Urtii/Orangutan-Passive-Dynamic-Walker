@@ -19,8 +19,6 @@ static const char alphanum[] ="0123456789"
 "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 "abcdefghijklmnopqrstuvwxyz";                // This variable is used for random generation of the client ID.
 
-unsigned long reconnect_timer = 0;              //variable to measure last reconnect attempt. Used to avoid delays.
-
 // Define a callback function to initialize the MQTT client.
 void callback(char* topic, byte* payload, unsigned int length) {
  }
@@ -113,22 +111,21 @@ void loop() {
 void reconnect(){
 
      char clientID[9];
-     if((millis() - reconnect_timer) < 5000){
-       Serial.println("Attempting MQTT connection");
-          // Generate ClientID
-          for (int i = 0; i < 8; i++) {
-              clientID[i] = alphanum[random(51)];
-          }
-          clientID[8]='\0';
 
-          // Connect to the ThingSpeak MQTT broker.
-          if (client.connect(clientID /* ,mqttUserName,mqttPass */))  {
-              Particle.publish("Conn:"+ String(server) + " cl: " + String(clientID)+ " Uname:" + String(mqttUserName));
-          } else
-          {
-              Particle.publish("Failed to connect, Trying to reconnect in 5 seconds");
-              delay(5000);
-          }
+     Serial.println("Attempting MQTT connection");
+        // Generate ClientID
+        for (int i = 0; i < 8; i++) {
+            clientID[i] = alphanum[random(51)];
+        }
+        clientID[8]='\0';
+
+        // Connect to the ThingSpeak MQTT broker.
+        if (client.connect(clientID /* ,mqttUserName,mqttPass */))  {
+            Particle.publish("Conn:"+ String(server) + " cl: " + String(clientID)+ " Uname:" + String(mqttUserName));
+        } else
+        {
+            Particle.publish("Failed to connect, Trying to reconnect in 5 seconds");
+            delay(5000);
         }
 }
 
